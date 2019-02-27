@@ -29,7 +29,7 @@ train_x = np.concatenate((np.ones((train_x.shape[0],1)),train_x), axis=1)
 #initial
 w = np.ones(train_x.shape[1])
 lr = 1
-iteration = 500000
+iteration = 100000
 prev_grad = 0
 
 for i in range(iteration) :
