@@ -1,1 +1,1 @@
-python3 hw2_logistc.py $1 $2
+python3 hw2_logistic.py $1 $2
