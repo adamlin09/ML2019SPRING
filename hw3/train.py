@@ -36,7 +36,8 @@ def split_valid(x_train, y_train, rate = 0.9) :
     return x_train, y_train, x_valid, y_valid
 
 def normalization(x) :
-    x /= 255
+    #x /= 255
+    x = (x - x.mean()) / x.std()
     return x
 
 def build_model():
@@ -57,25 +58,25 @@ def build_model():
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     model.add(MaxPool2D(2, 2))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.5))
 
     model.add(Conv2D(256, (3, 3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     model.add(MaxPool2D(2, 2))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.5))
 
     model.add(Conv2D(512, (3, 3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     model.add(MaxPool2D(2, 2))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.5))
 
     model.add(Conv2D(512, (3, 3), padding='same'))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     model.add(MaxPool2D(2, 2))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.5))
 
     model.add(Flatten())
 
