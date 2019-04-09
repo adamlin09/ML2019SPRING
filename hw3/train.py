@@ -1,7 +1,7 @@
 import numpy as np
 from keras import Sequential
 from keras.layers.core import Dense, Dropout, Activation
-from keras.layers import Convolution2D, MaxPooling2D, Flatten,LeakyReLU
+from keras.layers import Convolution2D, MaxPooling2D, Flatten,LeakyReLU, ZeroPadding2D
 from keras.optimizers import SGD, Adam
 from keras.utils import np_utils
 from keras.layers.normalization import BatchNormalization
@@ -24,7 +24,7 @@ def load_data(input) :
             y_label.append(int(row[0]))
             flat_array = np.array(row[1].split(' '), dtype = float)
             tmp = np.reshape(flat_array, (48, 48, 1))
-            tmp = np.concatenate((tmp, tmp, tmp), axis=2)
+            #tmp = np.concatenate((tmp, tmp, tmp), axis=2)
             x_train.append(tmp)
     y_train = np.zeros((len(y_label), 7))
     y_label = np.array(y_label)
@@ -92,18 +92,79 @@ def build_model():
     
     model.add(Dense(units = 7, activation = 'softmax', kernel_initializer='glorot_normal'))"""
 
-    model = VGG16(weights='imagenet', include_top=False, input_shape=(48, 48, 3))
+    """model = VGG16(weights='imagenet', include_top=False, input_shape=(48, 48, 3))
     
     x = Flatten()(model.output)
     x = Dense(1024, activation='relu')(x)
     x = BatchNormalization()(x)
     x = Dropout(0.5)(x)
     x = Dense(1024, activation='relu')(x)
-    x = BatchNormalization()(x)
-    x = Dropout(0.5)(x)
     x = Dense(7, activation='softmax')(x)
     # 重新建立模型結構
-    model=Model(model.input,x)
+    model=Model(model.input,x)"""
+
+    model = Sequential()
+    #model.add(ZeroPadding2D((1,1),input_shape=(48, 48, 1)))
+    model.add(Convolution2D(64, 3, 3, activation='relu', input_shape=(48, 48, 1), padding='same'))
+    model.add(BatchNormalization())
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(64, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(Dropout(0.5))
+    model.add(MaxPooling2D((2,2), strides=(2,2)))
+ 
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(128, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(128, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(Dropout(0.5))
+    model.add(MaxPooling2D((2,2), strides=(2,2)))
+ 
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(256, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(256, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(256, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(Dropout(0.5))
+    model.add(MaxPooling2D((2,2), strides=(2,2)))
+ 
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(Dropout(0.5))
+    model.add(MaxPooling2D((2,2), strides=(2,2)))
+ 
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(ZeroPadding2D((1,1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    #model.add(Dropout(0.5))
+    model.add(MaxPooling2D((2,2), strides=(2,2)))
+ 
+    model.add(Flatten())
+    model.add(Dense(128, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(32, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(7, activation='softmax'))
+
     print(model.summary())
     return model
 
