@@ -18,9 +18,13 @@ def load_data(input) :
             continue
         else :
             flat_array = np.array(row[1].split(' '), dtype = float)
-            x_test.append(np.array(flat_array.reshape(48, 48, 1)))
+            #tmp = np.reshape(flat_array, (48, 48, 1))
+            #tmp = np.concatenate((tmp, tmp, tmp), axis=2)
+            x_test.append(flat_array)
     
     x_test = np.array(x_test)
+    x_test = normalization(x_test)
+    x_test = np.reshape(x_test, (-1, 48, 48, 1))
     return x_test
 
 def test(x_test, modelfile) :
@@ -40,8 +44,8 @@ def write(filename, data) :
     outfile.close()
 
 if __name__ == "__main__":
-    modelfile = 'hw3_model.h5'
+    modelfile = './hw3_model.h5?dl=1'
     x_test = load_data(sys.argv[1])
-    x_test = normalization(x_test)
+    #x_test = normalization(x_test)
     result = test(x_test, modelfile)
     write(sys.argv[2], result)
