@@ -57,7 +57,6 @@ def segmentation(input):
     return skimage.segmentation.slic(input)
 
 def deprocess(x):
-    # normalize tensor: center on 0., ensure std is 0.1
     x -= x.mean()
     x /= (x.std() + 1e-5)
     x *= 0.1
@@ -94,9 +93,9 @@ if __name__ == "__main__":
     for j in range(len(x)):
         a = np.reshape(x[j], (1, 48, 48, 1))
         pred = model.predict(a)
-        target_output = K.categorical_crossentropy(tf.convert_to_tensor(y, dtype=float), model.output, from_logits=False)
+        loss = K.categorical_crossentropy(tf.convert_to_tensor(y, dtype=float), model.output, from_logits=False)
         last_conv_layer = model.get_layer('conv2d_1')
-        grads = K.gradients(target_output, last_conv_layer.output)[0]
+        grads = K.gradients(loss, last_conv_layer.output)[0]
         pooled_grads = K.mean(grads, axis=(0, 1, 2))
         iterate = K.function([model.input], [pooled_grads, last_conv_layer.output[0]])
         pooled_grads_value, conv_layer_output_value = iterate([a])
