@@ -89,7 +89,7 @@ if __name__ == "__main__":
             break
     x[3] = X_train[8]
     x, y = np.array(x), np.array(y)
-    outputpath = sys.argv[2]
+    outpath = sys.argv[2]
 
     for j in range(len(x)):
         a = np.reshape(x[j], (1, 48, 48, 1))
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         plt.colorbar()
     
         print(np.argmax(y[j]))
-        plt.savefig(outputpath + 'fig1_' + str(j) +'.jpg')
+        plt.savefig(outpath + 'fig1_' + str(j) +'.jpg')
         #plt.show()
         plt.clf()
 
@@ -147,24 +147,24 @@ if __name__ == "__main__":
         print(j)
     plt.title('filter of ' + layer_name, fontsize=20, y=12, x = -5)
     plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.5, hspace=0.5)
-    plt.savefig(outputpath + 'fig2_1.jpg')
+    plt.savefig(outpath + 'fig2_1.jpg')
     #plt.show()
     plt.clf()
 
     subModel = Model(model.input, model.get_layer('conv2d_1').output)
     predictions = subModel.predict(np.array([X_train[28000]]))
-    p = []
+    w = []
     for i in range(32):
-        p.append(predictions[0,:,:,i].reshape(48,48))
+        w.append(predictions[0,:,:,i].reshape(48,48))
     plt.figure(figsize=(20,20), dpi = 100)
     for i in range(32):
         plt.subplot(4, 8, i+1)
         plt.title('filter' + str(i), fontsize=10)
-        plt.imshow(p[i], cmap='gray')
+        plt.imshow(w[i], cmap='gray')
         print(i)
     plt.title('output face of filter ' + layer_name + "(image = 28000)", fontsize=20, y=12, x = -5)
     plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.5, hspace=0.5)
-    plt.savefig(outputpath + 'fig2_2.jpg')
+    plt.savefig(outpath + 'fig2_2.jpg')
     #plt.show()
     plt.clf()
     
@@ -182,7 +182,7 @@ if __name__ == "__main__":
                                     min_weight=0.0)
         plt.imshow(np.absolute(image))
         print(i)
-        plt.savefig(outputpath + 'fig3_' + str(i) + '.jpg')
+        plt.savefig(outpath + 'fig3_' + str(i) + '.jpg')
         #plt.show()
         plt.clf()
 
