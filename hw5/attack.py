@@ -1,9 +1,9 @@
 import numpy as np
-from keras.applications import vgg16
+from keras.applications import vgg16, vgg19
 from keras.applications.vgg16 import VGG16
 from keras.preprocessing import image
 from keras.applications.resnet50 import ResNet50
-import glob, sys
+import glob, sys, os
 import keras.backend as K
 
 input_dir = sys.argv[1]
@@ -22,14 +22,18 @@ print(x.shape)
 
 
 print("predicting...")
-model = VGG16(weights='imagenet')
+model = vgg19.VGG19(weights='imagenet')
 
 for i in range(x.shape[0]) :
-    a = np.reshape(x[i], (1, 224, 224, 3))
-    y = model.predict(a)
+    x_adv = np.reshape(x[i], (1, 224, 224, 3))
+    y = model.predict(x_adv)
     label = np.argmax(y)
 
     sess = K.get_session()
+    
+    e = 10
+    print('saving...' + str(i).zfill(3))
+
     # One hot encode the initial class
     target = K.one_hot(label, 1000)
     
@@ -37,13 +41,13 @@ for i in range(x.shape[0]) :
     loss = K.categorical_crossentropy(target, model.output)
     grads = K.gradients(loss, model.input)
     delta = K.sign(grads[0])
-    e = 10
-    x_adv = a + e * delta
-    x_adv = sess.run(x_adv, feed_dict={model.input:a})
+    x_adv = x_adv + e * delta
+    x_adv = sess.run(x_adv, feed_dict={model.input:np.reshape(x[i], (1, 224, 224, 3))})
 
-    print('saving...' + str(i).zfill(3))
+    
     img = image.array_to_img(x_adv[0])
-    img.show()
+    if not os.path.exists(sys.argv[2]) :
+        os.makedirs(sys.argv[2])
     out_path = sys.argv[2] + str(i).zfill(3) + '.png'
     img.save(out_path)
 print("Completed!")
