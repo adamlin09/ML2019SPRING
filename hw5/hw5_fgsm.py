@@ -23,7 +23,7 @@ print(x.shape)
 
 
 print("predicting...")
-model = vgg19.VGG19(weights='imagenet', backend=keras.backend, layers=keras.layers, models=keras.models, utils=keras.utils)
+model = vgg19.VGG19(weights='imagenet')
 
 for i in range(x.shape[0]) :
     x_adv = np.reshape(x[i], (1, 224, 224, 3))
