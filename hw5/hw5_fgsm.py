@@ -2,7 +2,7 @@ import numpy as np
 from keras.applications import vgg16, vgg19
 from keras.preprocessing import image
 from keras.applications.resnet50 import ResNet50
-import glob, sys, os
+import glob, sys
 import keras.backend as K
 from keras_applications.resnet import ResNet101, ResNet152
 import keras
