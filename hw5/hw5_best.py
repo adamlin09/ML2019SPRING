@@ -7,6 +7,9 @@ from PIL import Image
 from scipy.misc import imsave
 from torchvision.models import vgg16, vgg19, resnet50, resnet101, densenet121, densenet169 
 import sys, glob, os, csv
+# from scipy import signal
+# import math
+# import cv2
 
 use_cuda=True
 print("CUDA Available: ",torch.cuda.is_available())
@@ -63,12 +66,20 @@ for i in range(x.shape[0]):
     zero_gradients(image)
     
     output = model(image)
-    argmax = np.argmax(output.detach().numpy())
-    g = loss(output, torch.from_numpy(np.array(labels[i])).unsqueeze(0))
+    g = loss(output, torch.from_numpy(np.array(labels[i])).unsqueeze(0).type('torch.LongTensor'))
     g.backward() 
     
     # add epsilon to image
+    a = epsilon * image.grad.sign_()
     image = image + epsilon * image.grad.sign_()
+
+    output = model(image)
+    argmax = np.argmax(output.detach().numpy())
+    if argmax == labels[i]:
+        print('again')
+        # g = loss(output, torch.from_numpy(np.array(labels[i])).unsqueeze(0).type('torch.LongTensor'))
+        # g.backward()
+        image = image + a
 
     image = image.squeeze(0)
     image = transform.Normalize(mean=[-0.485/0.229, -0.456/0.224, -0.406/0.225], std=[1/0.229, 1/0.224, 1/0.225])(image)
@@ -86,4 +97,10 @@ for i in range(x.shape[0]):
         os.makedirs(sys.argv[2])
     out_path = sys.argv[2] + str(i).zfill(3) + '.png'
     imsave(out_path,image)
+
+    # if not os.path.exists('defense') :
+    #     os.makedirs('defense')
+    # out_path = 'defense/' + str(i).zfill(3) + '.png'
+    # image = cv2.GaussianBlur(image, (5, 5), 0)
+    # imsave(out_path,image)
     # image.save(out_path)
