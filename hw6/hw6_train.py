@@ -135,7 +135,7 @@ for i in range(7):
     else:
         train = train_data[0]
         label = labels[0]
-        for j in range(7):
+        for j in range(1,7):
             if j != i:
                 train = np.concatenate((train, train_data[j]))
                 label = np.concatenate((label, labels[j]))
