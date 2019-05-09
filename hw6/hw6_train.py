@@ -144,7 +144,7 @@ for i in range(7):
     check  = ModelCheckpoint("./check" + str(i) + "/batchnormal-{epoch:05d}-{val_acc:.5f}.h5",monitor='val_acc',save_best_only=True, verbose=1)
     model = build_model()
     model.compile(loss = 'categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
-    model.fit(train, label, batch_size=100, epochs=15, validation_data=(train_data[i], labels[i]), verbose=1, callbacks=check)
+    model.fit(train, label, batch_size=100, epochs=15, validation_data=(train_data[i], labels[i]), verbose=1, callbacks=[check])
     name = 'model_' + str(i) + '.h5'
     model.save(name)
     print(name + 'saved')
