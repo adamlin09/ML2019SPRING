@@ -62,7 +62,7 @@ models.append(model5)
 for i in range(len(models)):
     name = 'model_' + str(i) + '.h5'
     model = models[i]
-    print(name + 'loaded')
+    print(name + ' loaded')
 
     output = model.predict(tx2.reshape((-1, 40, 250)))
     outputs.append(output)
