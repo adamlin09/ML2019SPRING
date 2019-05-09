@@ -11,13 +11,14 @@ from keras.utils import np_utils
 from keras.layers.normalization import BatchNormalization
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras import regularizers
-import sys, csv, os
+import sys, csv, os, time
 from keras.preprocessing.image import ImageDataGenerator
 from keras.applications.vgg16 import VGG16
 from keras.models import Model
 from keras.models import load_model
 from keras.layers import GRU, LSTM, Bidirectional
 
+start = time.time()
 # import tensorflow as tf
 # config = tf.ConfigProto()
 # config.gpu_options.allow_growth = True
@@ -48,17 +49,17 @@ model0 = load_model('./check0/batchnormal-00006-0.75179.h5')
 models.append(model0)
 model1 = load_model('./check1/batchnormal-00006-0.75185.h5')
 models.append(model1)
-model2 = load_model('./check2/batchnormal-00004-0.74332.h5')
-models.append(model2)
+# model2 = load_model('./check2/batchnormal-00004-0.74332.h5')
+# models.append(model2)
 model3 = load_model('./check3/batchnormal-00006-0.74938.h5')
 models.append(model3)
 model4 = load_model('./check4/batchnormal-00004-0.74909.h5')
 models.append(model4)
 model5 = load_model('./check5/batchnormal-00005-0.74821.h5')
 models.append(model5)
-model6 = load_model('./check6/batchnormal-00006-0.74597.h5')
-models.append(model6)
-for i in range(7):
+# model6 = load_model('./check6/batchnormal-00006-0.74597.h5')
+# models.append(model6)
+for i in range(len(models)):
     name = 'model_' + str(i) + '.h5'
     model = models[i]
     print(name + 'loaded')
@@ -73,7 +74,7 @@ for i in range(len(test_x)):
     print('\r>row: {}'.format(i), end="", flush=True)
     # output = model.predict(tx2[i].reshape((-1, 40, 250)))
     num0, num1 = 0, 0
-    for j in range(7):
+    for j in range(len(models)):
         k = np.argmax(outputs[j][i])
         if k == 0:
             num0 += 1
@@ -84,3 +85,8 @@ for i in range(len(test_x)):
     else:
         writer.writerow([i, 1])
 outfile.close()
+
+end = time.time()
+elapsed = end - start
+print('')
+print("Time taken: ", elapsed, "seconds.")
