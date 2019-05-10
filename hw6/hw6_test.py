@@ -24,6 +24,7 @@ start = time.time()
 # config.gpu_options.allow_growth = True
 # sess = tf.Session(config = config)
 
+jieba.load_userdict(sys.argv[2])
 f = pd.read_csv(sys.argv[1])
 test_x = f['comment']
 test_x = np.array(test_x)
