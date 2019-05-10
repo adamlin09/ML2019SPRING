@@ -24,8 +24,14 @@ start = time.time()
 # config.gpu_options.allow_growth = True
 # sess = tf.Session(config = config)
 
+f = pd.read_csv(sys.argv[1])
+test_x = f['comment']
+test_x = np.array(test_x)
+for i in range(test_x.shape[0]):
+    test_x[i] = jieba.lcut(test_x[i])
+test_x = np.array(test_x)
+
 w2vmodel = Word2Vec.load('word2vec.model')
-test_x = np.load('test_x.npy')
 tx2 = np.zeros((len(test_x), 40, 250))
 for i in range(len(test_x)):
     # x = np.zeros((40, 250))
