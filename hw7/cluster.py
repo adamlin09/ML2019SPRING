@@ -38,7 +38,6 @@ def load_data(path):
         print('\r> Loading \'{}\''.format(f_names[i]), end="", flush=True)
     print('')
     imgs = np.array(imgs)
-    print(imgs.shape)
     return imgs
 
 input_img = Input(shape=(32,32,3))  # adapt this if using `channels_first` image data format
