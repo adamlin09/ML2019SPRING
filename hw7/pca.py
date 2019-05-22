@@ -26,6 +26,26 @@ def process(M):
 imgs, img_shape = load_data(sys.argv[1])
 mean = np.mean(imgs, axis=0)
 imgs -= mean
+U, s, V = np.linalg.svd(imgs.T, full_matrices=False)
+
+IMAGE_PATH = sys.argv[1]
+re_image = [sys.argv[2]] 
+for x in re_image: 
+    # Load image & Normalize
+    print(x)
+    picked_img = io.imread(os.path.join(IMAGE_PATH,x))  
+    X = picked_img.flatten().astype('float32') 
+    # print(X)
+    X -= mean
+    
+    # Compression
+    weight = np.array(X.dot(U[:, :5]))  
+
+    # Reconstruction
+    reconstruct = process(weight.dot(U[:, :5].T) + mean)
+    # print(reconstruct)
+    io.imsave(sys.argv[3], reconstruct.reshape(img_shape)) 
+print('reconstruction completed !')
 
 # report (a)
 average = process(mean)
@@ -33,7 +53,6 @@ io.imsave('report1_a.jpg', average.reshape(img_shape))
 print('report1_a : OK!')
 
 # report (b)
-U, s, V = np.linalg.svd(imgs.T, full_matrices=False)
 U_eigen = U[:, :5]
 U_eigen = U_eigen.T
 for i in range(len(U_eigen)):
@@ -49,7 +68,7 @@ for x in test_image:
     print(x)
     picked_img = io.imread(os.path.join(IMAGE_PATH,x))  
     X = picked_img.flatten().astype('float32') 
-    print(X)
+    # print(X)
     X -= mean
     
     # Compression
@@ -57,7 +76,7 @@ for x in test_image:
 
     # Reconstruction
     reconstruct = process(weight.dot(U[:, :5].T) + mean)
-    print(reconstruct)
+    # print(reconstruct)
     io.imsave(x[:-4] + '_reconstruction.jpg', reconstruct.reshape(img_shape)) 
 print('report1_c : OK!')
 
