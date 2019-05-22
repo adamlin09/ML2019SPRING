@@ -17,11 +17,11 @@ def load_data(path):
     return imgs, img_shape
 
 def process(M):
-    M -= np.min(M)
-    M /= np.max(M)
-    M = (M * 255).astype(np.uint8)
-    return M
-
+    mdfk = np.copy(M)
+    mdfk -= np.min(mdfk)
+    mdfk /= np.max(mdfk)
+    mdfk = (mdfk * 255).astype(np.uint8)
+    return mdfk
 
 imgs, img_shape = load_data(sys.argv[1])
 mean = np.mean(imgs, axis=0)
@@ -34,23 +34,31 @@ print('report1_a : OK!')
 
 # report (b)
 U, s, V = np.linalg.svd(imgs.T, full_matrices=False)
-U = U.T
-for i in range(5):
-    eigen_vector = process(U[i])
+U_eigen = U[:, :5]
+U_eigen = U_eigen.T
+for i in range(len(U_eigen)):
+    eigen_vector = process(U_eigen[i])
     io.imsave(str(i) + '_eigenface.jpg', eigen_vector.reshape(img_shape))
 print('report1_b : OK!')
 
 # report (c)
-test = [1, 10, 22, 37, 72]
-U_new = U[:5].T #1080000, 5
-s_new = np.diag(s)[:5]   #5, 415
-V_new = V[:, test]  #415, 5
-reconstruction = np.dot(U_new, s_new)
-reconstruction = np.dot(reconstruction, V_new)
-reconstruction = reconstruction.T
-for i in range(len(reconstruction)):
-    x = process(reconstruction[i] + mean)
-    io.imsave(str(test[i]) + '_reconstruction.jpg', x.reshape(img_shape))
+IMAGE_PATH = 'Aberdeen'
+test_image = ['1.jpg','10.jpg','22.jpg','37.jpg','72.jpg'] 
+for x in test_image: 
+    # Load image & Normalize
+    print(x)
+    picked_img = io.imread(os.path.join(IMAGE_PATH,x))  
+    X = picked_img.flatten().astype('float32') 
+    print(X)
+    X -= mean
+    
+    # Compression
+    weight = np.array(X.dot(U[:, :5]))  
+
+    # Reconstruction
+    reconstruct = process(weight.dot(U[:, :5].T) + mean)
+    print(reconstruct)
+    io.imsave(x[:-4] + '_reconstruction.jpg', reconstruct.reshape(img_shape)) 
 print('report1_c : OK!')
 
 # report (d)
