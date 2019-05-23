@@ -20,7 +20,6 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.manifold import TSNE
 import pandas as pd
-import matplotlib.pyplot as plt
 
 start = time.time()
 
