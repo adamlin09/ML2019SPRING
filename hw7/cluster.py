@@ -90,7 +90,7 @@ print(encoded_imgs.shape)
 
 pca = PCA(n_components=200, copy=False, whiten=True, svd_solver='full')
 new_vec = pca.fit_transform(encoded_imgs.reshape(-1, 256))
-# tsne = TSNE(n_components=4, init='pca', random_state=0)
+# tsne = TSNE(n_components=2, init='pca', random_state=0)
 # new_vec = tsne.fit_transform(encoded_imgs.reshape(-1, 256))
 
 kmeans = KMeans(n_clusters=2, random_state=0)
