@@ -20,6 +20,7 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.manifold import TSNE
 import pandas as pd
+import matplotlib.pyplot as plt
 
 start = time.time()
 
@@ -87,7 +88,7 @@ np.save('train_data.npy', train_data)
 # encoder.save('encoder.h5')
 # autoencoder.save('autoencoder.h5')
 encoder = load_model('encoder.h5')
-# autoencoder = load_model('autoencoder.h5')
+autoencoder = load_model('autoencoder.h5')
 encoded_imgs = encoder.predict(train_data)
 print(encoded_imgs.shape)
 
