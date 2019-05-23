@@ -74,10 +74,6 @@ def load_data(path):
 # train_data = np.load('train_data.npy')
 train_data = load_data(sys.argv[1])
 np.save('train_data.npy', train_data)
-# print(train_data[0])
-# print(img_as_float(train_data[0]))
-# print(img_as_float(train_data[0])*255.0)
-# train_data /= 255.0
 
 # autoencoder.fit(train_data, train_data,
 #                 epochs=50,
@@ -96,11 +92,6 @@ pca = PCA(n_components=200, copy=False, whiten=True, svd_solver='full')
 new_vec = pca.fit_transform(encoded_imgs.reshape(-1, 256))
 # tsne = TSNE(n_components=4, init='pca', random_state=0)
 # new_vec = tsne.fit_transform(encoded_imgs.reshape(-1, 256))
-
-# test = autoencoder.predict(train_data[6].reshape(-1, 32, 32, 3))
-# t = test*255.0
-# io.imsave('test.jpg', t[0].astype('uint8'))
-# print('OK')
 
 kmeans = KMeans(n_clusters=2, random_state=0)
 kmeans = kmeans.fit(new_vec)
