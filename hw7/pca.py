@@ -5,7 +5,7 @@ from skimage import io, img_as_float64, img_as_float, img_as_int
 start = time.time()
 
 def load_data(path):
-    f_names = sorted(glob.glob(path + '*.jpg'), key=lambda x:int(x[9:-4]))
+    f_names = [ os.path.join(path, '{}.jpg').format(i) for i in range(415) ]
     img_shape = io.imread(f_names[0]).shape
     imgs = []
     for i in range(len(f_names)):  # f_names为所有图片地址，list
@@ -88,3 +88,4 @@ for i in range(5):
 end = time.time()
 elapsed = end - start
 print("Time taken: ", elapsed, "seconds.")
+
